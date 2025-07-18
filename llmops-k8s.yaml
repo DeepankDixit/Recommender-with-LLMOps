@@ -1,0 +1,48 @@
+#K8s file can be of two kinds - one for deployment and one for service (kind: Deployment and kind: Service)
+#you can either create separate files for these or keep in the same like we do here
+#app name ()"llmops-app" here) should be the same throughout the doc
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llmops-app
+  labels:
+    app: llmops
+spec:
+  replicas: 1 #how many replicas of kubernetes I want
+  selector:
+    matchLabels:
+      app: llmops
+  template:
+    metadata:
+      labels:
+        app: llmops
+    spec:
+      containers:
+      - name: llmops-container
+        image: llmops-app:latest  # Use local image
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 8501 #should be same as target port here
+        envFrom:
+          - secretRef:
+              name: llmops-secrets #cannot push these on Github
+              #we take our env vars from .env and inject them directly inside the kubernetes cluster
+              #we will name that injection as llmops-secrets
+              #we are fetching that injection here
+
+---
+#
+apiVersion: v1
+kind: Service
+metadata:
+  name: llmops-service
+spec:
+  type: LoadBalancer #clusterid, or loadbalancer, or nodepool
+  selector:
+    app: llmops
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8501 #should be the one used for streamlit
