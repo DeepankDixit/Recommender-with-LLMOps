@@ -17,8 +17,8 @@ st.title("Anime Recommender System")
 
 query = st.text_input("Enter your anime preferences eg. : Light hearted anime with school settings")
 if query:
-    with st.spinner("Fetching recommendations for you...")
-    response = pipeline.recommend(query=query)
-    st.markdown("### Recommendations")
-    st.write(response)
+    with st.spinner("Fetching recommendations for you..."):
+        response = pipeline.recommend(query=query)
+        st.markdown("### Recommendations")
+        st.write(response)
 
