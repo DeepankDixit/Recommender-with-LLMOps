@@ -2,3 +2,4 @@ venv/
 logs/
 AR.egg-info/
 .env
+readme.ipynb
